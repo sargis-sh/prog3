@@ -1,36 +1,44 @@
-class Xot {
-    constructor(x, y) {
+class LivingCreature {
+    constructor(x, y, index){
         this.x = x;
         this.y = y;
-        this.dirr = [this.x, this.y];
-        this.life = 0;
+        this.dirr=[this.x, this.y];
+        this.multiply = 0;
+        this.index = index;
         this.directions = [
-            [this.x - 1, this.y - 1],
-            [this.x, this.y - 1],
-            [this.x + 1, this.y - 1],
-            [this.x - 1, this.y],
-            [this.x + 1, this.y],
-            [this.x - 1, this.y + 1],
-            [this.x, this.y + 1],
-            [this.x + 1, this.y + 1]
-        ];
+           [this.x - 1, this.y - 1],
+           [this.x, this.y - 1],
+           [this.x + 1, this.y - 1],
+           [this.x - 1, this.y],
+           [this.x + 1, this.y],
+           [this.x - 1, this.y + 1],
+           [this.x, this.y + 1],
+           [this.x + 1, this.y + 1]
+       ];
+ 
     }
-    chooseCell(char) {
-        let arr = [];
-
-        for (let index = 0; index < this.directions.length; index++) {
-            let x = this.directions[index][0];
-            let y = this.directions[index][1];
-            if (x >= 0 && y >= 0 && x < matrix[0].length && y < matrix.length) {
-                if (matrix[y][x] == char) {
-                    arr.push(this.directions[index])
+    chooseCell(ch) {
+        var found = [];
+        for (var i in this.directions) {
+            var x = this.directions[i][0];
+            var y = this.directions[i][1];
+            if (x >= 0 && x < matrix[0].length && y >= 0 && y < matrix.length){
+                if (matrix[y][x] == ch) {
+                    found.push(this.directions[i]);
                 }
-            }
+            }   
         }
-
-        return arr;
+        return found;
     }
-    mul() {
+}
+
+class Xot extends LivingCreature {
+    constructor(x, y, index){
+        super(x, y, index);
+        this.life = 0;
+    }
+
+   mul() {
         this.life++;
         let newCell = random(this.chooseCell(0));
         if (newCell && this.life > 10) {
@@ -44,52 +52,27 @@ class Xot {
     }
 }
 
-class Xotaker {
-    constructor(x, y) {
-        this.x = x;
-        this.y = y;
-        this.dirr = [this.x, this.y];
+class Xotaker extends LivingCreature {
+    constructor(x, y, index){
+        super(x, y, index);
         this.energy = 30;
-        this.directions = [
-            [this.x - 1, this.y - 1],
-            [this.x, this.y - 1],
-            [this.x + 1, this.y - 1],
-            [this.x - 1, this.y],
-            [this.x + 1, this.y],
-            [this.x - 1, this.y + 1],
-            [this.x, this.y + 1],
-            [this.x + 1, this.y + 1]
-        ];
     }
-    chooseCell(char) {
-        let arr = [];
-
-        for (let index = 0; index < this.directions.length; index++) {
-            let x = this.directions[index][0];
-            let y = this.directions[index][1];
-
-            if (x >= 0 && y >= 0 && x < matrix[0].length && y < matrix.length) {
-                if (matrix[y][x] == char) {
-                    arr.push(this.directions[index])
-                }
-            }
-
-        }
-
-        return arr;
-    }
-    getNewDirections() {
-        this.directions = [
-            [this.x - 1, this.y - 1],
-            [this.x, this.y - 1],
-            [this.x + 1, this.y - 1],
-            [this.x - 1, this.y],
-            [this.x + 1, this.y],
-            [this.x - 1, this.y + 1],
-            [this.x, this.y + 1],
-            [this.x + 1, this.y + 1]
-        ];
-    }
+   getNewCoordinates() {
+       this.directions = [
+           [this.x - 1, this.y - 1],
+           [this.x, this.y - 1],
+           [this.x + 1, this.y - 1],
+           [this.x - 1, this.y],
+           [this.x + 1, this.y],
+           [this.x - 1, this.y + 1],
+           [this.x, this.y + 1],
+           [this.x + 1, this.y + 1]
+       ];
+   }
+   chooseCell(character) {
+       this.getNewCoordinates();
+       return super.chooseCell(character);
+   }
     mul() {
         let newCell = random(this.chooseCell(0));
         if (newCell) {
@@ -110,7 +93,7 @@ class Xotaker {
         }
     }
     eat() {
-        this.getNewDirections();
+        this.getNewCoordinates();
         let newCell = random(this.chooseCell(1));
         if (newCell) {
             this.energy += 5;
@@ -156,52 +139,28 @@ class Xotaker {
     }
 }
 
-class Gish {
-    constructor(x, y) {
-        this.x = x;
-        this.y = y;
+class Gish extends LivingCreature {
+    constructor(x, y, index){
+        super(x, y, index);
         this.energy = 50;
-        this.dirr = [this.x, this.y];
-        this.directions = [
-            [this.x - 1, this.y - 1],
-            [this.x, this.y - 1],
-            [this.x + 1, this.y - 1],
-            [this.x - 1, this.y],
-            [this.x + 1, this.y],
-            [this.x - 1, this.y + 1],
-            [this.x, this.y + 1],
-            [this.x + 1, this.y + 1]
-        ];
     }
-    chooseCell(char) {
-        let arr = [];
+  getNewCoordinates() {
+       this.directions = [
+           [this.x - 1, this.y - 1],
+           [this.x, this.y - 1],
+           [this.x + 1, this.y - 1],
+           [this.x - 1, this.y],
+           [this.x + 1, this.y],
+           [this.x - 1, this.y + 1],
+           [this.x, this.y + 1],
+           [this.x + 1, this.y + 1]
+       ];
+   }
+   chooseCell(character) {
+       this.getNewCoordinates();
+       return super.chooseCell(character);
+   }
 
-        for (let index = 0; index < this.directions.length; index++) {
-            let x = this.directions[index][0];
-            let y = this.directions[index][1];
-
-            if (x >= 0 && y >= 0 && x < matrix[0].length && y < matrix.length) {
-                if (matrix[y][x] == char) {
-                    arr.push(this.directions[index])
-                }
-            }
-
-        }
-
-        return arr;
-    }
-    getNewDirections() {
-        this.directions = [
-            [this.x - 1, this.y - 1],
-            [this.x, this.y - 1],
-            [this.x + 1, this.y - 1],
-            [this.x - 1, this.y],
-            [this.x + 1, this.y],
-            [this.x - 1, this.y + 1],
-            [this.x, this.y + 1],
-            [this.x + 1, this.y + 1]
-        ];
-    }
     mul() {
         let newCell = random(this.chooseCell(0));
         if (newCell) {
@@ -222,7 +181,7 @@ class Gish {
         }
     }
     eat() {
-        this.getNewDirections();
+        this.getNewCoordinates();
         let newCell = random(this.chooseCell(2));
         if (newCell) {
             this.energy += 10;
@@ -266,52 +225,28 @@ class Gish {
     }
 }
 
-class Killer {
-    constructor(x, y) {
-        this.x = x;
-        this.y = y;
+class Killer extends LivingCreature {
+    constructor(x, y, index){
+        super(x, y, index);
         this.energy = 100;
-        this.dirr = [this.x, this.y];
-        this.directions = [
-            [this.x - 1, this.y - 1],
-            [this.x, this.y - 1],
-            [this.x + 1, this.y - 1],
-            [this.x - 1, this.y],
-            [this.x + 1, this.y],
-            [this.x - 1, this.y + 1],
-            [this.x, this.y + 1],
-            [this.x + 1, this.y + 1]
-        ];
     }
-    chooseCell(char) {
-        let arr = [];
+  getNewCoordinates() {
+       this.directions = [
+           [this.x - 1, this.y - 1],
+           [this.x, this.y - 1],
+           [this.x + 1, this.y - 1],
+           [this.x - 1, this.y],
+           [this.x + 1, this.y],
+           [this.x - 1, this.y + 1],
+           [this.x, this.y + 1],
+           [this.x + 1, this.y + 1]
+       ];
+   }
+   chooseCell(character) {
+       this.getNewCoordinates();
+       return super.chooseCell(character);
+   }
 
-        for (let index = 0; index < this.directions.length; index++) {
-            let x = this.directions[index][0];
-            let y = this.directions[index][1];
-
-            if (x >= 0 && y >= 0 && x < matrix[0].length && y < matrix.length) {
-                if (matrix[y][x] == char) {
-                    arr.push(this.directions[index])
-                }
-            }
-
-        }
-
-        return arr;
-    }
-    getNewDirections() {
-        this.directions = [
-            [this.x - 1, this.y - 1],
-            [this.x, this.y - 1],
-            [this.x + 1, this.y - 1],
-            [this.x - 1, this.y],
-            [this.x + 1, this.y],
-            [this.x - 1, this.y + 1],
-            [this.x, this.y + 1],
-            [this.x + 1, this.y + 1]
-        ];
-    }
     mul() {
         let newCell = random(this.chooseCell(0));
         if (newCell) {
@@ -332,7 +267,7 @@ class Killer {
         }
     }
     eat() {
-        this.getNewDirections();
+        this.getNewCoordinates();
         let newCell = random(this.chooseCell(2));
         if (newCell) {
             this.energy += 10;
@@ -379,40 +314,12 @@ class Killer {
     }
 }
 
-class Antar {
-    constructor(x, y) {
-        this.x = x;
-        this.y = y;
-        this.dies=0;
+class Antar extends LivingCreature {
+    constructor(x, y, index){
+        super(x, y, index);
         this.hashiv = 0;
-        this.directions = [
-            [this.x - 1, this.y - 1],
-            [this.x, this.y - 1],
-            [this.x + 1, this.y - 1],
-            [this.x - 1, this.y],
-            [this.x + 1, this.y],
-            [this.x - 1, this.y + 1],
-            [this.x, this.y + 1],
-            [this.x + 1, this.y + 1]
-        ];
+        this.dies=0;
     }
-
-    chooseCell(char) {
-        let arr = [];
-
-        for (let index = 0; index < this.directions.length; index++) {
-            let x = this.directions[index][0];
-            let y = this.directions[index][1];
-            if (x >= 0 && y >= 0 && x < matrix[0].length && y < matrix.length) {
-                if (matrix[y][x] == char) {
-                    arr.push(this.directions[index])
-                }
-            }
-        }
-
-        return arr;
-    }
-
     die() {
         matrix[this.y][this.x] = 0;
         for (let index = 0; index < antarArr.length; index++) {
@@ -439,40 +346,13 @@ class Antar {
     }
 }
 
-class Gyux {
-    constructor(x, y) {
-        this.x = x;
-        this.y = y;
-        this.dies=0;
+class Gyux extends LivingCreature {
+
+     constructor(x, y, index){
+        super(x, y, index);
         this.hashiv = 0;
-        this.directions = [
-            [this.x - 1, this.y - 1],
-            [this.x, this.y - 1],
-            [this.x + 1, this.y - 1],
-            [this.x - 1, this.y],
-            [this.x + 1, this.y],
-            [this.x - 1, this.y + 1],
-            [this.x, this.y + 1],
-            [this.x + 1, this.y + 1]
-        ];
+        this.dies=0;
     }
-
-    chooseCell(char) {
-        let arr = [];
-
-        for (let index = 0; index < this.directions.length; index++) {
-            let x = this.directions[index][0];
-            let y = this.directions[index][1];
-            if (x >= 0 && y >= 0 && x < matrix[0].length && y < matrix.length) {
-                if (matrix[y][x] == char) {
-                    arr.push(this.directions[index])
-                }
-            }
-        }
-
-        return arr;
-    }
-
     die() {
         matrix[this.y][this.x] = 0;
         for (let index = 0; index < gyuxArr.length; index++) {
@@ -498,40 +378,12 @@ class Gyux {
     }
 }
 
-class Gom {
-    constructor(x, y) {
-        this.dies=0;
-        this.x = x;
-        this.y = y;
+class Gom extends LivingCreature{
+        constructor(x, y, index){
+        super(x, y, index);
         this.hashiv = 0;
-        this.directions = [
-            [this.x - 1, this.y - 1],
-            [this.x, this.y - 1],
-            [this.x + 1, this.y - 1],
-            [this.x - 1, this.y],
-            [this.x + 1, this.y],
-            [this.x - 1, this.y + 1],
-            [this.x, this.y + 1],
-            [this.x + 1, this.y + 1]
-        ];
+        this.dies=0;
     }
-
-    chooseCell(char) {
-        let arr = [];
-
-        for (let index = 0; index < this.directions.length; index++) {
-            let x = this.directions[index][0];
-            let y = this.directions[index][1];
-            if (x >= 0 && y >= 0 && x < matrix[0].length && y < matrix.length) {
-                if (matrix[y][x] == char) {
-                    arr.push(this.directions[index])
-                }
-            }
-        }
-
-        return arr;
-    }
-
     die() {
         matrix[this.y][this.x] = 0;
         for (let index = 0; index < gomArr.length; index++) {
@@ -557,54 +409,27 @@ class Gom {
     }
 }
 
-class Pos {
-    constructor(x, y) {
-        this.x = x;
-        this.y = y;
+class Pos extends LivingCreature {
+getNewCoordinates() {
+       this.directions = [
+           [this.x - 1, this.y - 1],
+           [this.x, this.y - 1],
+           [this.x + 1, this.y - 1],
+           [this.x - 1, this.y],
+           [this.x + 1, this.y],
+           [this.x - 1, this.y + 1],
+           [this.x, this.y + 1],
+           [this.x + 1, this.y + 1]
+       ];
+   }
+constructor(x, y, index){
+        super(x, y, index);
         this.chap = 0;
-        this.dirs = [
-            [this.x - 1, this.y - 1],
-            [this.x, this.y - 1],
-            [this.x + 1, this.y - 1],
-            [this.x - 1, this.y],
-            [this.x + 1, this.y],
-            [this.x - 1, this.y + 1],
-            [this.x, this.y + 1],
-            [this.x + 1, this.y + 1]
-        ];
     }
-    getNewDirs() {
-        this.dirs = [
-            [this.x - 1, this.y - 1],
-            [this.x, this.y - 1],
-            [this.x + 1, this.y - 1],
-            [this.x - 1, this.y],
-            [this.x + 1, this.y],
-            [this.x - 1, this.y + 1],
-            [this.x, this.y + 1],
-            [this.x + 1, this.y + 1]
-        ];
-    }
-    chooseCell(char) {
-        let arr = [];
-
-        for (let index = 0; index < this.dirs.length; index++) {
-            let x = this.dirs[index][0];
-            let y = this.dirs[index][1];
-            if (x >= 0 && y >= 0 && x < matrix[0].length && y < matrix.length) {
-                if (matrix[y][x] == char) {
-                    arr.push(this.dirs[index])
-                }
-            }
-        }
-
-        return arr;
-    }
-
     eat() {
-    	this.getNewDirs()
-        	let newCell = random(this.chooseCell(1).concat(this.chooseCell(2)).concat(this.chooseCell(3)).concat(this.chooseCell(4)));
-        	if(newCell){
+     this.getNewCoordinates();
+         let newCell = random(this.chooseCell(1).concat(this.chooseCell(2)).concat(this.chooseCell(3)).concat(this.chooseCell(4)));
+         if(newCell){
             let x = newCell[0];
             let y = newCell[1];
             matrix[y][x] = 11;
@@ -647,54 +472,15 @@ class Pos {
         }
             else{
             this.chap++
-            }           	
+            }            
     }
 }
-    
-class Amk {
-    constructor(x, y) {
-        this.x = x;
-        this.y = y;
-        this.energy=100;
+
+class Amk extends LivingCreature {
+constructor(x, y, index){
+        super(x, y, index);
         this.qayl = 0;
-        this.dirs = [
-            [this.x - 1, this.y - 1],
-            [this.x, this.y - 1],
-            [this.x + 1, this.y - 1],
-            [this.x - 1, this.y],
-            [this.x + 1, this.y],
-            [this.x - 1, this.y + 1],
-            [this.x, this.y + 1],
-            [this.x + 1, this.y + 1]
-        ];
-    }
-    getNewDirs() {
-        this.dirs = [
-            [this.x - 1, this.y - 1],
-            [this.x, this.y - 1],
-            [this.x + 1, this.y - 1],
-            [this.x - 1, this.y],
-            [this.x + 1, this.y],
-            [this.x - 1, this.y + 1],
-            [this.x, this.y + 1],
-            [this.x + 1, this.y + 1]
-        ];
-    }
-    chooseCell(char) {
-        this.getNewDirs();
-        let arr = [];
-
-        for (let index = 0; index < this.dirs.length; index++) {
-            let x = this.dirs[index][0];
-            let y = this.dirs[index][1];
-            if (x >= 0 && y >= 0 && x < matrix[0].length && y < matrix.length) {
-                if (matrix[y][x] == char) {
-                    arr.push(this.dirs[index])
-                }
-            }
-        }
-
-        return arr;
+        this.energy=100;
     }
     die() {
         matrix[this.y][this.x] = 0;
@@ -760,40 +546,12 @@ class Amk {
     }
 }
 
-class Amkamk {
-    constructor(x, y) {
-        this.x = x;
-        this.d=0;
-        this.y = y;
+class Amkamk extends LivingCreature {
+    constructor(x, y, index){
+        super(x, y, index);
         this.hashiv = 0;
-        this.directions = [
-            [this.x - 1, this.y - 1],
-            [this.x, this.y - 1],
-            [this.x + 1, this.y - 1],
-            [this.x - 1, this.y],
-            [this.x + 1, this.y],
-            [this.x - 1, this.y + 1],
-            [this.x, this.y + 1],
-            [this.x + 1, this.y + 1]
-        ];
+        this.d=0;
     }
-
-    chooseCell(char) {
-        let arr = [];
-
-        for (let index = 0; index < this.directions.length; index++) {
-            let x = this.directions[index][0];
-            let y = this.directions[index][1];
-            if (x >= 0 && y >= 0 && x < matrix[0].length && y < matrix.length) {
-                if (matrix[y][x] == char) {
-                    arr.push(this.directions[index])
-                }
-            }
-        }
-
-        return arr;
-    }
-
     die() {
         matrix[this.y][this.x] = 0;
         for (let index = 0; index < amkamkArr.length; index++) {
